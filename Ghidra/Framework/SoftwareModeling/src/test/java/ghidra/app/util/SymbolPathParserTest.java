@@ -166,4 +166,28 @@ public class SymbolPathParserTest extends AbstractGTest {
 		assertListEqualOrdered(expected, list);
 	}
 
+	@Test
+	public void testOverloadedArrowOperator() {
+
+		String name = "std::unique_ptr<A::B,std::default_delete<A::B> >::operator->";
+		List<String> list = SymbolPathParser.parse(name);
+		List<String> expected = new ArrayList<>();
+		expected.add("std");
+		expected.add("unique_ptr<A::B,std::default_delete<A::B> >");
+		expected.add("operator->");
+		assertListEqualOrdered(expected, list);
+	}
+
+	@Test
+	public void testOverloadedArrowStarOperator() {
+
+		String name = "A::Ptr<A::B>::operator->*";
+		List<String> list = SymbolPathParser.parse(name);
+		List<String> expected = new ArrayList<>();
+		expected.add("A");
+		expected.add("Ptr<A::B>");
+		expected.add("operator->*");
+		assertListEqualOrdered(expected, list);
+	}
+
 }
