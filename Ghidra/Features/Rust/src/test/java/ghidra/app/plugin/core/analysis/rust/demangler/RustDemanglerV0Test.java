@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.Test;
 
 import generic.test.AbstractGenericTest;
+import ghidra.app.util.demangler.Demangled;
 import ghidra.app.util.demangler.DemangledException;
 import ghidra.app.util.demangler.DemangledObject;
 
@@ -83,6 +84,19 @@ public class RustDemanglerV0Test {
 				fail("Couldn't demangle symbol " + mangled);
 			}
 		}
+	}
+
+	@Test
+	public void demangleFunctionPointerReturnTypeInGenerics() throws DemangledException {
+		// <hashbrown::map::HashMap<&str, for<'a> fn(&'a str) -> usize, RandomState>>::insert
+		DemangledObject demangled = new RustDemangler().demangle(
+			"_RNvMs1_NtCs6TGhmFDxev4_9hashbrown3mapINtB5_7HashMapReFG_RL0_eEjNtNtNtCsltoPSO9jLTx_3std4hash6random11RandomStateE6insertCsch8wzqLwCFF_4demo");
+		assertEquals("insert", demangled.getName());
+		Demangled namespace = demangled.getNamespace();
+		assertEquals(
+			"<hashbrown[5058acdf077f3608]::map::HashMap<&str,for<'a>fn(&'a_str)->usize,std[fa1f9247dd4797e9]::hash::random::RandomState>>",
+			namespace.getName());
+		assertNull(namespace.getNamespace());
 	}
 
 	@Test

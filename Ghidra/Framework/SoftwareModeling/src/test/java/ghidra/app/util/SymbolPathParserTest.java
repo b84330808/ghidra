@@ -166,4 +166,17 @@ public class SymbolPathParserTest extends AbstractGTest {
 		assertListEqualOrdered(expected, list);
 	}
 
+	@Test
+	public void testFunctionPointerArrowInTemplate() {
+
+		String name = "std::rt::lang_start<fn()->core::result::Result<(),std::io::Error>>::inner";
+		List<String> list = SymbolPathParser.parse(name);
+		List<String> expected = new ArrayList<>();
+		expected.add("std");
+		expected.add("rt");
+		expected.add("lang_start<fn()->core::result::Result<(),std::io::Error>>");
+		expected.add("inner");
+		assertListEqualOrdered(expected, list);
+	}
+
 }
